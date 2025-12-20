@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>新年祝福</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            /* 夜晚天空颜色 - 深蓝色渐变 */
+            background: linear-gradient(to bottom, #0a1931 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* 添加一些星星背景 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* 弹窗内容样式 */
+        .modal-content {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 弹窗文字样式 - 字体：微软雅黑，大小：48px，颜色：黑色，居中 */
+        .modal-text {
+            font-family: "Microsoft YaHei", sans-serif;
+            /* 字体：微软雅黑 */
+            font-size: 48px;
+            /* 大小：48px */
+            color: #000;
+            /* 颜色：黑色 */
+            margin-bottom: 40px;
+            text-align: center;
+            /* 居中 */
+        }
+
+        /* 按钮样式 - 字体：微软雅黑，大小：二号(约24px)，颜色：红色 */
+        .receive-btn {
+            font-family: "Microsoft YaHei", sans-serif;
+            /* 字体：微软雅黑 */
+            font-size: 24px;
+            /* 大小：二号(约24px) */
+            color: white;
+            background-color: #FF0000;
+            /* 颜色：红色 */
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .receive-btn:hover,
+        .receive-btn:active {
+            background-color: #CC0000;
+            transform: scale(1.05);
+        }
+
+        /* 新年祝福页面 */
+        .new-year-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+        }
+
+        /* 新年祝福文字容器 */
+        .new-year-text {
+            text-align: center;
+            z-index: 950;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* 年份文字样式 - 字体：微软雅黑，大小：120px，颜色：白色，加粗 */
+        .year {
+            font-family: "Microsoft YaHei", sans-serif;
+            /* 字体：微软雅黑 */
+            font-size: 120px;
+            /* 大小：120px */
+            color: #FFFFFF;
+            /* 颜色：白色 */
+            font-weight: bold;
+            /* 加粗 */
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* 祝福语样式 - 字体：行楷，大小：90px，颜色：红色，加粗 */
+        .greeting {
+            /* 使用行楷字体，如果没有则使用系统默认的楷体或宋体 */
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 90px;
+            /* 大小：90px */
+            color: #FF0000;
+            /* 颜色：红色 */
+            font-weight: bold;
+            /* 加粗 */
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* 烟花容器 */
+        .fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* 烟花粒子样式 */
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* 烟花弹样式 */
+        .firework-shell {
+            position: absolute;
+            width: 6px;
+            height: 12px;
+            background-color: #FF9900;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+        }
+
+        /* 烟花爆炸后的余烬效果 */
+        .ember {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* 右下角箭头 */
+        .next-arrow {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            display: none;
+            /* 初始隐藏，烟花出现后再显示 */
+        }
+
+        .next-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .arrow-icon {
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 20px solid #FF0000;
+            margin-left: 5px;
+        }
+
+        /* 第二个界面 - 新年祝福场景 */
+        .wish-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            /* 初始隐藏 */
+            z-index: 1100;
+            overflow: hidden;
+        }
+
+        /* 地面 */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to top, #3a2310 0%, #5a3a20 30%, #7a5a30 100%);
+            z-index: 3;
+        }
+
+        .ground-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
+
+        /* 孔明灯 */
+        .lantern {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .lantern-body {
+            width: 40px;
+            height: 60px;
+            background-color: rgba(255, 165, 0, 0.9);
+            border-radius: 10px;
+            position: relative;
+            box-shadow:
+                inset 0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(255, 165, 0, 0.8);
+            animation: lanternGlow 3s infinite alternate;
+        }
+
+        .lantern-flame {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 15px;
+            background: linear-gradient(to top, #FF4500 0%, #FF8C00 50%, #FFD700 100%);
+            border-radius: 50% 50% 20% 20%;
+            filter: blur(2px);
+            animation: flameFlicker 1s infinite alternate;
+        }
+
+        /* 灯谜墙 */
+        .riddle-wall {
+            position: absolute;
+            left: 5%;
+            top: 20%;
+            /* 与祈福架顶部对齐 */
+            width: 45%;
+            height: 60%;
+            /* 与祈福架高度相同 */
+            background-color: rgba(139, 69, 19, 0.85);
+            border-radius: 15px;
+            border: 8px solid #8B4513;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 4;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: flex-start;
+            overflow: hidden;
+        }
+
+        .wall-title {
+            width: 100%;
+            text-align: center;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 28px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        /* 灯谜牌 */
+        .riddle-plaque {
+            width: 22%;
+            height: 22%;
+            margin: 1%;
+            background-color: #FFF8DC;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .riddle-plaque:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .riddle-plaque-top {
+            width: 100%;
+            height: 10px;
+            background-color: #8B0000;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+        }
+
+        .riddle-plaque-hole {
+            width: 8px;
+            height: 8px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .riddle-plaque-string {
+            width: 2px;
+            height: 12px;
+            background-color: #FF0000;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .riddle-plaque-content {
+            padding: 8px 5px;
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 14px;
+            /* 灯谜牌上的字体大小 */
+            color: #8B0000;
+            text-align: center;
+            height: calc(100% - 10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+
+        .riddle-plaque-tassel {
+            width: 12px;
+            height: 20px;
+            background: linear-gradient(to bottom, #FF0000 0%, #8B0000 100%);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* 祝福架 - 高度为原来的三分之二，底部与地面相接 */
+        .wish-rack {
+            position: absolute;
+            right: 5%;
+            top: 20%;
+            /* 与灯谜墙顶部对齐 */
+            width: 25%;
+            height: 60%;
+            /* 原来的三分之二，与灯谜墙高度相同 */
+            background-color: rgba(139, 69, 19, 0.9);
+            border-radius: 15px;
+            border: 8px solid #8B4513;
+            box-shadow:
+                inset 0 0 30px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 4;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rack-title {
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 24px;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        .rack-structure {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .rack-bar {
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(to right, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .rack-bar::before,
+        .rack-bar::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #8B4513;
+            border-radius: 50%;
+            top: -4px;
+        }
+
+        .rack-bar::before {
+            left: -10px;
+        }
+
+        .rack-bar::after {
+            right: -10px;
+        }
+
+        /* 祝福牌 */
+        .wish-plaque {
+            position: absolute;
+            width: 40px;
+            height: 55px;
+            background-color: #FFF8DC;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .wish-plaque:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .plaque-top {
+            width: 100%;
+            height: 8px;
+            background-color: #8B0000;
+            border-radius: 6px 6px 0 0;
+            position: relative;
+        }
+
+        .plaque-hole {
+            width: 6px;
+            height: 6px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .plaque-string {
+            width: 2px;
+            height: 10px;
+            background-color: #FF0000;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .plaque-content {
+            padding: 8px 4px;
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 11px;
+            color: #8B0000;
+            text-align: center;
+            height: calc(100% - 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+            opacity: 0;
+            /* 初始不显示文字 */
+        }
+
+        .plaque-tassel {
+            width: 12px;
+            height: 20px;
+            background: linear-gradient(to bottom, #FF0000 0%, #8B0000 30%, #FF0000 70%, #8B0000 100%);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* 第三个界面 - 祝福牌详情界面 */
+        .plaque-detail-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            /* 初始隐藏 */
+            z-index: 1200;
+            background: linear-gradient(to bottom, #0a1931 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .detail-plaque {
+            width: 400px;
+            height: 500px;
+            background-color: #FFF8DC;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.9);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .detail-plaque-top {
+            width: 100%;
+            height: 15px;
+            background-color: #8B0000;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .detail-plaque-hole {
+            width: 12px;
+            height: 12px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .detail-plaque-string {
+            width: 3px;
+            height: 20px;
+            background-color: #FF0000;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .detail-plaque-content {
+            padding: 30px 20px;
+            width: 100%;
+            text-align: center;
+            height: calc(100% - 15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+        /* 谜语内容样式 - 对称排版 */
+        .riddle-question {
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 50px;
+            /* 谜语字体大小 */
+            color: #8B0000;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .riddle-answer {
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 50px;
+            /* 答案字体大小 */
+            color: #FF0000;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #8B0000;
+            width: 100%;
+        }
+
+        /* 祝福语内容样式 */
+        .blessing-content {
+            font-family: "STXingkai", "Xingkai SC", "KaiTi", "SimKai", cursive;
+            font-size: 50px;
+            /* 祝福语字体大小 */
+            color: #8B0000;
+            text-align: center;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .detail-plaque-tassel {
+            width: 25px;
+            height: 40px;
+            background: linear-gradient(to bottom, #FF0000 0%, #8B0000 30%, #FF0000 70%, #8B0000 100%);
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 0 0 15px 15px;
+        }
+
+        /* 返回箭头 */
+        .back-arrow {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .back-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .back-icon {
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 20px solid #FF0000;
+            margin-right: 5px;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes lanternGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(255, 200, 0, 0.9);
+            }
+        }
+
+        @keyframes flameFlicker {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .year {
+                font-size: 80px;
+            }
+
+            .greeting {
+                font-size: 60px;
+            }
+
+            .riddle-wall {
+                width: 48%;
+            }
+
+            .wish-rack {
+                width: 30%;
+            }
+
+            .riddle-plaque-content {
+                font-size: 12px;
+            }
+
+            .plaque-content {
+                font-size: 10px;
+            }
+
+            .detail-plaque {
+                width: 320px;
+                height: 420px;
+            }
+
+            .riddle-question,
+            .riddle-answer,
+            .blessing-content {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-text {
+                font-size: 40px;
+            }
+
+            .year {
+                font-size: 60px;
+            }
+
+            .greeting {
+                font-size: 45px;
+            }
+
+            .riddle-wall,
+            .wish-rack {
+                padding: 10px;
+            }
+
+            .wall-title,
+            .rack-title {
+                font-size: 20px;
+            }
+
+            .riddle-plaque {
+                width: 45%;
+                height: 22%;
+                margin: 2%;
+            }
+
+            .riddle-plaque-content {
+                font-size: 10px;
+            }
+
+            .wish-plaque {
+                width: 35px;
+                height: 50px;
+            }
+
+            .plaque-content {
+                font-size: 9px;
+            }
+
+            .detail-plaque {
+                width: 280px;
+                height: 380px;
+                padding: 25px 15px;
+            }
+
+            .riddle-question,
+            .riddle-answer,
+            .blessing-content {
+                font-size: 28px;
+            }
+        }
+
+        /* 移动端特殊优化 */
+        @media (max-width: 768px) and (orientation: portrait) {
+
+            /* 竖屏手机 */
+            .wish-scene {
+                overflow: hidden;
+                position: relative;
+            }
+
+            .riddle-wall {
+                width: 45% !important;
+                height: 65vh !important;
+                top: 15% !important;
+                overflow-y: auto !important;
+            }
+
+            .wish-rack {
+                width: 25% !important;
+                height: 65vh !important;
+                top: 15% !important;
+                overflow-y: auto !important;
+            }
+
+            /* 确保所有灯谜牌可见 */
+            .riddle-plaque {
+                min-height: 70px;
+            }
+
+            /* 确保所有祝福牌可见 */
+            .plaques-container {
+                height: calc(100% - 40px);
+                overflow-y: auto;
+                position: relative;
+            }
+
+            .wish-plaque {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                margin: 8px auto !important;
+                display: inline-block !important;
+                vertical-align: top !important;
+            }
+        }
+
+        /* 针对iPhone优化 */
+        @supports (-webkit-touch-callout: none) {
+            .greeting {
+                font-family: "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", sans-serif;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+
+    <!-- 初始弹窗 -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content">
+            <div class="modal-text">你有一条信息</div>
+            <button class="receive-btn" id="receiveBtn">收到</button>
+        </div>
+    </div>
+
+    <!-- 新年祝福页面 -->
+    <div class="new-year-container" id="newYearContainer">
+        <!-- 烟花容器 -->
+        <div class="fireworks-container" id="fireworksContainer"></div>
+
+        <!-- 新年祝福文字 -->
+        <div class="new-year-text">
+            <div class="year" id="yearText">2026</div>
+            <div class="greeting" id="greetingText">新年快乐！！！</div>
+        </div>
+
+        <!-- 右下角箭头 -->
+        <div class="next-arrow" id="nextArrow">
+            <div class="arrow-icon"></div>
+        </div>
+    </div>
+
+    <!-- 第二个界面 - 新年祝福场景 -->
+    <div class="wish-scene" id="wishScene">
+        <!-- 地面 -->
+        <div class="ground">
+            <div class="ground-texture"></div>
+        </div>
+
+        <!-- 孔明灯容器 -->
+        <div class="lanterns-container" id="lanternsContainer"></div>
+
+        <!-- 灯谜墙 -->
+        <div class="riddle-wall">
+            <div class="wall-title">猜灯谜</div>
+            <!-- 灯谜牌将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 祝福架 -->
+        <div class="wish-rack">
+            <div class="rack-title">新年祝福</div>
+            <div class="rack-structure">
+                <div class="rack-bar"></div>
+                <div class="rack-bar"></div>
+                <div class="rack-bar"></div>
+                <div class="rack-bar"></div>
+            </div>
+            <!-- 祝福牌将通过JavaScript动态生成 -->
+            <div class="plaques-container" id="plaquesContainer"></div>
+        </div>
+    </div>
+
+    <!-- 第三个界面 - 祝福牌详情 -->
+    <div class="plaque-detail-container" id="plaqueDetailContainer">
+        <div class="detail-plaque" id="detailPlaque">
+            <div class="detail-plaque-top">
+                <div class="detail-plaque-hole"></div>
+                <div class="detail-plaque-string"></div>
+            </div>
+            <div class="detail-plaque-content" id="detailPlaqueContent">
+                <!-- 内容将在这里动态显示 -->
+            </div>
+            <div class="detail-plaque-tassel"></div>
+        </div>
+
+        <!-- 返回箭头 -->
+        <div class="back-arrow" id="backArrow">
+            <div class="back-icon"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 获取DOM元素
+            const messageModal = document.getElementById('messageModal');
+            const receiveBtn = document.getElementById('receiveBtn');
+            const newYearContainer = document.getElementById('newYearContainer');
+            const fireworksContainer = document.getElementById('fireworksContainer');
+            const starsContainer = document.getElementById('stars');
+            const yearText = document.getElementById('yearText');
+            const greetingText = document.getElementById('greetingText');
+            const nextArrow = document.getElementById('nextArrow');
+            const wishScene = document.getElementById('wishScene');
+            const lanternsContainer = document.getElementById('lanternsContainer');
+            const riddleWall = document.querySelector('.riddle-wall');
+            const plaquesContainer = document.getElementById('plaquesContainer');
+            const plaqueDetailContainer = document.getElementById('plaqueDetailContainer');
+            const detailPlaqueContent = document.getElementById('detailPlaqueContent');
+            const backArrow = document.getElementById('backArrow');
+
+            // 灯谜数组 - 16个新年灯谜（新年主题）
+            const riddles = [
+                "春节前后共相聚（打一字）",
+                "新年迎来新气象（打一字）",
+                "除夕夜守岁（打一成语）",
+                "新年快乐（打一古籍名）",
+                "春节三日（打一字）",
+                "新年走红运（打一成语）",
+                "春节放假（打一金融名词）",
+                "春节前夕（打一字）",
+                "新年新气象（打一歌曲名）",
+                "春节三日游（打一字）",
+                "恭贺新年（打一历史年号）",
+                "新年大吉（打一字）",
+                "春节三日有安排（打一字）",
+                "新年对联（打一字）",
+                "新年钟声（打一乐器）",
+                "春节晚会（打一字）"
+            ];
+
+            // 灯谜答案
+            const riddleAnswers = [
+                "期",
+                "样",
+                "辞旧迎新",
+                "《易经》",
+                "人",
+                "开门红",
+                "年息",
+                "肯",
+                "《好日子》",
+                "人",
+                "庆历",
+                "桔",
+                "音",
+                "章",
+                "鼓",
+                "多"
+            ];
+
+            // 祝福语数组 - 不针对特定对象的祝福语
+            const blessings = [
+                "新年快乐，万事如意",
+                "身体健康，平安喜乐",
+                "财源广进，福气满满",
+                "心想事成，梦想成真",
+                "笑口常开，好运连连",
+                "阖家幸福，团团圆圆",
+                "事业顺利，步步高升",
+                "吉祥如意，福星高照",
+                "快乐安康，幸福绵长",
+                "年年有余，岁岁平安",
+                "福禄双全，喜气洋洋",
+                "前程似锦，一帆风顺",
+                "好运常伴，快乐永随",
+                "幸福美满，其乐融融",
+                "金玉满堂，花开富贵",
+                "春风得意，马到成功",
+                "心想事成，美梦成真",
+                "五福临门，六六大顺",
+                "福如东海，寿比南山",
+                "阖家欢乐，幸福安康"
+            ];
+
+            // 创建星空背景
+            createStars();
+
+            // 设置年份和祝福语
+            const currentYear = new Date().getFullYear();
+            yearText.textContent = (currentYear + 1).toString();
+            greetingText.textContent = "新年快乐！！！"; // 改为三个感叹号
+
+            // 点击"收到"按钮
+            receiveBtn.addEventListener('click', function () {
+                // 淡出弹窗
+                messageModal.style.animation = 'fadeOut 0.5s forwards';
+
+                // 延迟显示新年祝福页面
+                setTimeout(function () {
+                    messageModal.style.display = 'none';
+                    newYearContainer.style.display = 'flex';
+
+                    // 开始烟花表演
+                    startFireworkShow();
+
+                    // 显示右下角箭头
+                    setTimeout(() => {
+                        nextArrow.style.display = 'flex';
+                    }, 1500);
+                }, 500);
+            });
+
+            // 点击右下角箭头进入第二个界面
+            nextArrow.addEventListener('click', function () {
+                // 淡出第一个界面
+                newYearContainer.style.animation = 'fadeOut 0.8s forwards';
+
+                setTimeout(() => {
+                    newYearContainer.style.display = 'none';
+                    // 显示第二个界面
+                    wishScene.style.display = 'block';
+
+                    // 创建孔明灯
+                    createLanterns();
+
+                    // 创建灯谜牌
+                    createRiddlePlaques();
+
+                    // 创建祝福牌
+                    createWishPlaques();
+                }, 800);
+            });
+
+            // 点击返回箭头返回祝福场景
+            backArrow.addEventListener('click', function () {
+                // 淡出第三个界面
+                plaqueDetailContainer.style.animation = 'fadeOut 0.8s forwards';
+
+                setTimeout(() => {
+                    plaqueDetailContainer.style.display = 'none';
+                    // 显示第二个界面
+                    wishScene.style.display = 'block';
+                    wishScene.style.animation = 'fadeIn 0.8s forwards';
+                }, 800);
+            });
+
+            // 创建星空背景
+            function createStars() {
+                const starCount = 150;
+
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+
+                    // 随机大小（1-3像素）
+                    const size = Math.random() * 2 + 1;
+                    star.style.width = size + 'px';
+                    star.style.height = size + 'px';
+
+                    // 随机位置
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+
+                    // 随机闪烁动画
+                    const duration = Math.random() * 3 + 2;
+                    const delay = Math.random() * 5;
+                    star.style.animation = `twinkle ${duration}s infinite ${delay}s`;
+
+                    // 随机透明度
+                    star.style.opacity = Math.random() * 0.5 + 0.3;
+
+                    starsContainer.appendChild(star);
+                }
+            }
+
+            // 开始烟花表演 - 连续发射，无间隙
+            function startFireworkShow() {
+                // 清空现有的烟花容器
+                fireworksContainer.innerHTML = '';
+
+                // 持续发射烟花，无间隙
+                const launchInterval = setInterval(() => {
+                    // 每批发射5-6个烟花
+                    const batchCount = 5 + Math.floor(Math.random() * 2);
+                    for (let i = 0; i < batchCount; i++) {
+                        setTimeout(() => {
+                            launchFirework();
+                        }, i * 100); // 快速连续发射
+                    }
+                }, 800); // 每0.8秒发射一批，无间隙
+
+                // 5分钟后停止
+                setTimeout(() => {
+                    clearInterval(launchInterval);
+                }, 5 * 60 * 1000);
+            }
+
+            // 发射单个烟花
+            function launchFirework() {
+                // 随机选择烟花类型
+                const fireworkTypes = ['standard', 'ring', 'heart', 'star', 'spiral'];
+                const fireworkType = fireworkTypes[Math.floor(Math.random() * fireworkTypes.length)];
+
+                // 随机水平位置 (10% 到 90% 之间，避免太靠边)
+                const launchX = Math.random() * 80 + 10;
+
+                // 随机爆炸高度 (距离上方边界2/3到1/4的地方，即从上往下25%到66%的位置)
+                const explosionY = Math.random() * 41 + 25; // 25% 到 66%
+
+                // 创建烟花弹
+                const shell = document.createElement('div');
+                shell.classList.add('firework-shell');
+
+                // 随机烟花弹颜色
+                const shellColors = ['#FF9900', '#FF6600', '#FF3300', '#FFFF00'];
+                shell.style.backgroundColor = shellColors[Math.floor(Math.random() * shellColors.length)];
+
+                // 设置发射位置 (从底部发射)
+                shell.style.left = launchX + '%';
+                shell.style.bottom = '0px';
+                shell.style.opacity = '1';
+
+                fireworksContainer.appendChild(shell);
+
+                // 计算飞行时间
+                const flightDistance = explosionY;
+                const flightDuration = flightDistance * 3 + 150; // 更快
+
+                // 烟花弹上升动画
+                const shellAnimation = shell.animate([
+                    {
+                        transform: 'translateY(0) scale(1)',
+                        opacity: 1
+                    },
+                    {
+                        transform: `translateY(-${explosionY}vh) scale(0.8)`,
+                        opacity: 1
+                    }
+                ], {
+                    duration: flightDuration,
+                    easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)'
+                });
+
+                // 烟花弹到达顶点后爆炸
+                shellAnimation.onfinish = () => {
+                    // 移除烟花弹
+                    shell.remove();
+
+                    // 在爆炸点创建爆炸效果
+                    createExplosion(launchX, explosionY, fireworkType);
+                };
+            }
+
+            // 创建爆炸效果
+            function createExplosion(explosionX, explosionY, fireworkType) {
+                let particleCount, explosionRadius;
+
+                // 根据烟花类型设置参数
+                switch (fireworkType) {
+                    case 'ring':
+                        particleCount = 150;
+                        explosionRadius = 40;
+                        createRingExplosion(explosionX, explosionY, explosionRadius, particleCount);
+                        break;
+                    case 'heart':
+                        particleCount = 180;
+                        explosionRadius = 45;
+                        createHeartExplosion(explosionX, explosionY, explosionRadius, particleCount);
+                        break;
+                    case 'star':
+                        particleCount = 200;
+                        explosionRadius = 50;
+                        createStarExplosion(explosionX, explosionY, explosionRadius, particleCount);
+                        break;
+                    case 'spiral':
+                        particleCount = 160;
+                        explosionRadius = 40;
+                        createSpiralExplosion(explosionX, explosionY, explosionRadius, particleCount);
+                        break;
+                    default: // standard
+                        particleCount = 120;
+                        explosionRadius = 45;
+                        createStandardExplosion(explosionX, explosionY, explosionRadius, particleCount);
+                }
+            }
+
+            // 创建标准爆炸效果
+            function createStandardExplosion(centerX, centerY, radius, particleCount) {
+                const colors = ['#FF0000', '#FF6600', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#FF00FF'];
+
+                // 创建爆炸中心亮点
+                createExplosionCenter(centerX, centerY, colors[0]);
+
+                // 创建爆炸粒子
+                for (let i = 0; i < particleCount; i++) {
+                    createExplosionParticle(centerX, centerY, colors, radius, 'standard', i, particleCount);
+                }
+            }
+
+            // 创建环形爆炸效果
+            function createRingExplosion(centerX, centerY, radius, particleCount) {
+                const colors = ['#00FFFF', '#00FF00', '#FFFF00', '#FF9900', '#FF0000'];
+
+                // 创建爆炸中心亮点
+                createExplosionCenter(centerX, centerY, colors[0]);
+
+                // 创建多个环
+                for (let ring = 0; ring < 3; ring++) {
+                    const ringRadius = radius * (0.4 + ring * 0.3);
+                    const ringParticleCount = Math.floor(particleCount / 3);
+
+                    for (let i = 0; i < ringParticleCount; i++) {
+                        setTimeout(() => {
+                            createExplosionParticle(centerX, centerY, colors, ringRadius, 'ring', i, ringParticleCount);
+                        }, ring * 50);
+                    }
+                }
+            }
+
+            // 创建心形爆炸效果
+            function createHeartExplosion(centerX, centerY, radius, particleCount) {
+                const colors = ['#FF0066', '#FF3366', '#FF6699', '#FF0033'];
+
+                // 创建爆炸中心亮点
+                createExplosionCenter(centerX, centerY, colors[0]);
+
+                for (let i = 0; i < particleCount; i++) {
+                    createExplosionParticle(centerX, centerY, colors, radius, 'heart', i, particleCount);
+                }
+            }
+
+            // 创建星形爆炸效果
+            function createStarExplosion(centerX, centerY, radius, particleCount) {
+                const colors = ['#FFFF00', '#FF9900', '#FF6600', '#FF0000'];
+
+                // 创建爆炸中心亮点
+                createExplosionCenter(centerX, centerY, colors[0]);
+
+                for (let i = 0; i < particleCount; i++) {
+                    createExplosionParticle(centerX, centerY, colors, radius, 'star', i, particleCount);
+                }
+            }
+
+            // 创建螺旋爆炸效果
+            function createSpiralExplosion(centerX, centerY, radius, particleCount) {
+                const colors = ['#00FFFF', '#00FF00', '#FFFF00', '#FF9900'];
+
+                // 创建爆炸中心亮点
+                createExplosionCenter(centerX, centerY, colors[0]);
+
+                for (let i = 0; i < particleCount; i++) {
+                    createExplosionParticle(centerX, centerY, colors, radius, 'spiral', i, particleCount);
+                }
+            }
+
+            // 创建爆炸中心亮点
+            function createExplosionCenter(centerX, centerY, color) {
+                const centerGlow = document.createElement('div');
+                centerGlow.classList.add('firework');
+                centerGlow.style.width = '20px';
+                centerGlow.style.height = '20px';
+                centerGlow.style.backgroundColor = color;
+                centerGlow.style.left = centerX + '%';
+                centerGlow.style.top = centerY + '%';
+                centerGlow.style.opacity = '1';
+                centerGlow.style.boxShadow = `0 0 30px 15px ${color}`;
+                centerGlow.style.zIndex = '5';
+
+                fireworksContainer.appendChild(centerGlow);
+
+                // 中心亮点快速消失
+                centerGlow.animate([
+                    { transform: 'scale(1)', opacity: 1 },
+                    { transform: 'scale(3)', opacity: 0 }
+                ], {
+                    duration: 150,
+                    easing: 'ease-out'
+                });
+
+                setTimeout(() => {
+                    centerGlow.remove();
+                }, 150);
+            }
+
+            // 创建爆炸粒子
+            function createExplosionParticle(centerX, centerY, colors, radius, pattern, index, total) {
+                const particle = document.createElement('div');
+                particle.classList.add('firework');
+
+                // 随机颜色
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+
+                // 随机大小
+                const size = Math.random() * 8 + 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+
+                // 设置粒子起始位置
+                particle.style.left = centerX + '%';
+                particle.style.top = centerY + '%';
+
+                // 添加发光效果
+                particle.style.boxShadow = `0 0 ${size * 2}px ${color}`;
+
+                fireworksContainer.appendChild(particle);
+
+                // 计算爆炸方向
+                let tx, ty;
+
+                switch (pattern) {
+                    case 'ring':
+                        // 环形爆炸
+                        const angle = (index / total) * Math.PI * 2;
+                        const distance = radius;
+                        tx = Math.cos(angle) * distance;
+                        ty = Math.sin(angle) * distance;
+                        break;
+
+                    case 'heart':
+                        // 心形爆炸
+                        const t = index / total * Math.PI * 2;
+                        const heartX = 16 * Math.pow(Math.sin(t), 3);
+                        const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                        tx = heartX * 1.5;
+                        ty = heartY * 1.5;
+                        break;
+
+                    case 'star':
+                        // 星形爆炸
+                        const starAngle = (index / total) * Math.PI * 2;
+                        const starPoints = 5;
+                        const starRadius = radius * (0.5 + 0.5 * Math.sin(starPoints * starAngle));
+                        tx = Math.cos(starAngle) * starRadius;
+                        ty = Math.sin(starAngle) * starRadius;
+                        break;
+
+                    case 'spiral':
+                        // 螺旋爆炸
+                        const spiralAngle = index / total * Math.PI * 10;
+                        const spiralRadius = index / total * radius;
+                        tx = Math.cos(spiralAngle) * spiralRadius;
+                        ty = Math.sin(spiralAngle) * spiralRadius;
+                        break;
+
+                    default: // standard
+                        // 标准球形爆炸
+                        const randomAngle = Math.random() * Math.PI * 2;
+                        const randomDistance = Math.random() * radius + 5;
+                        tx = Math.cos(randomAngle) * randomDistance;
+                        ty = Math.sin(randomAngle) * randomDistance * 0.8 + randomDistance * 0.2;
+                }
+
+                // 随机动画持续时间
+                const duration = Math.random() * 500 + 300;
+
+                // 爆炸动画
+                particle.animate([
+                    {
+                        transform: 'translate(0, 0) scale(1)',
+                        opacity: 1
+                    },
+                    {
+                        transform: `translate(${tx}vw, ${ty}vh) scale(0.2)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)'
+                });
+
+                // 移除粒子
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.remove();
+                    }
+                }, duration + 100);
+            }
+
+            // 创建孔明灯
+            function createLanterns() {
+                // 清空现有的孔明灯
+                lanternsContainer.innerHTML = '';
+
+                // 创建多个孔明灯
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createLantern();
+                    }, i * 2000);
+                }
+
+                // 持续创建孔明灯
+                const lanternInterval = setInterval(() => {
+                    createLantern();
+                }, 6000);
+
+                // 10分钟后停止
+                setTimeout(() => {
+                    clearInterval(lanternInterval);
+                }, 10 * 60 * 1000);
+            }
+
+            function createLantern() {
+                const lantern = document.createElement('div');
+                lantern.classList.add('lantern');
+
+                // 随机水平位置
+                const left = Math.random() * 80 + 10; // 10% 到 90%
+                lantern.style.left = left + '%';
+
+                // 从底部开始
+                lantern.style.bottom = '20%';
+
+                // 随机大小
+                const scale = Math.random() * 0.4 + 0.6;
+                lantern.style.transform = `scale(${scale})`;
+
+                // 创建孔明灯结构
+                const lanternBody = document.createElement('div');
+                lanternBody.classList.add('lantern-body');
+
+                const lanternFlame = document.createElement('div');
+                lanternFlame.classList.add('lantern-flame');
+
+                lanternBody.appendChild(lanternFlame);
+                lantern.appendChild(lanternBody);
+
+                lanternsContainer.appendChild(lantern);
+
+                // 上升动画
+                const duration = 20000 + Math.random() * 10000; // 20-30秒
+                lantern.animate([
+                    {
+                        transform: `translateY(0) scale(${scale}) rotate(0deg)`,
+                        opacity: 0.9
+                    },
+                    {
+                        transform: `translateY(-120vh) scale(${scale}) rotate(${Math.random() * 10 - 5}deg)`,
+                        opacity: 0.9
+                    }
+                ], {
+                    duration: duration,
+                    easing: 'linear'
+                });
+
+                // 移除孔明灯
+                setTimeout(() => {
+                    if (lantern.parentNode) {
+                        lantern.remove();
+                    }
+                }, duration);
+            }
+
+            // 创建灯谜牌
+            function createRiddlePlaques() {
+                // 清空现有的灯谜牌
+                riddleWall.innerHTML = '<div class="wall-title">猜灯谜</div>';
+
+                // 复制灯谜数组并打乱顺序
+                const shuffledRiddles = [...riddles].sort(() => Math.random() - 0.5);
+
+                // 创建16个灯谜牌
+                for (let i = 0; i < 16; i++) {
+                    const riddle = shuffledRiddles[i] || "春节前后共相聚（打一字）";
+                    const answer = riddleAnswers[i] || "期";
+
+                    // 创建灯谜牌元素
+                    const plaque = document.createElement('div');
+                    plaque.classList.add('riddle-plaque');
+                    plaque.dataset.riddle = riddle;
+                    plaque.dataset.answer = answer;
+
+                    // 创建灯谜牌结构
+                    const plaqueTop = document.createElement('div');
+                    plaqueTop.classList.add('riddle-plaque-top');
+
+                    const plaqueHole = document.createElement('div');
+                    plaqueHole.classList.add('riddle-plaque-hole');
+
+                    const plaqueString = document.createElement('div');
+                    plaqueString.classList.add('riddle-plaque-string');
+
+                    const plaqueContent = document.createElement('div');
+                    plaqueContent.classList.add('riddle-plaque-content');
+                    plaqueContent.textContent = riddle;
+
+                    const plaqueTassel = document.createElement('div');
+                    plaqueTassel.classList.add('riddle-plaque-tassel');
+
+                    plaqueTop.appendChild(plaqueHole);
+                    plaqueTop.appendChild(plaqueString);
+                    plaque.appendChild(plaqueTop);
+                    plaque.appendChild(plaqueContent);
+                    plaque.appendChild(plaqueTassel);
+
+                    // 添加点击事件
+                    plaque.addEventListener('click', function () {
+                        handleRiddleClick(riddle, answer);
+                    });
+
+                    riddleWall.appendChild(plaque);
+                }
+            }
+
+            // 处理灯谜牌点击
+            function handleRiddleClick(riddle, answer) {
+                // 设置第三个界面的内容 - 对称排版
+                detailPlaqueContent.innerHTML = `
+                    <div class="riddle-question">${riddle}</div>
+                    <div class="riddle-answer">答案：${answer}</div>
+                `;
+
+                // 淡出第二个界面
+                wishScene.style.animation = 'fadeOut 0.8s forwards';
+
+                setTimeout(() => {
+                    wishScene.style.display = 'none';
+                    // 显示第三个界面
+                    plaqueDetailContainer.style.display = 'flex';
+                    plaqueDetailContainer.style.animation = 'fadeIn 0.8s forwards';
+                }, 800);
+            }
+
+            // 创建祝福牌
+            function createWishPlaques() {
+                // 清空现有的祝福牌
+                plaquesContainer.innerHTML = '';
+
+                // 复制祝福语数组并打乱顺序
+                const shuffledBlessings = [...blessings].sort(() => Math.random() - 0.5);
+
+                // 祝福牌位置（对应祝福架的4排，每排5个）
+                const positions = [];
+                const barTop = [15, 40, 65, 90]; // 四排的垂直位置百分比
+
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 5; col++) {
+                        positions.push({
+                            top: `${barTop[row]}%`,
+                            left: `${10 + col * 20}%`
+                        });
+                    }
+                }
+
+                // 创建20个祝福牌
+                for (let i = 0; i < 20; i++) {
+                    const blessing = shuffledBlessings[i] || "新年快乐，万事如意";
+
+                    // 创建祝福牌元素
+                    const plaque = document.createElement('div');
+                    plaque.classList.add('wish-plaque');
+                    plaque.dataset.blessing = blessing;
+
+                    // 设置位置
+                    plaque.style.top = positions[i].top;
+                    plaque.style.left = positions[i].left;
+                    plaque.style.transform = 'translate(-50%, -50%)';
+
+                    // 创建祝福牌结构
+                    const plaqueTop = document.createElement('div');
+                    plaqueTop.classList.add('plaque-top');
+
+                    const plaqueHole = document.createElement('div');
+                    plaqueHole.classList.add('plaque-hole');
+
+                    const plaqueString = document.createElement('div');
+                    plaqueString.classList.add('plaque-string');
+
+                    const plaqueContent = document.createElement('div');
+                    plaqueContent.classList.add('plaque-content');
+                    plaqueContent.textContent = blessing;
+
+                    const plaqueTassel = document.createElement('div');
+                    plaqueTassel.classList.add('plaque-tassel');
+
+                    plaqueTop.appendChild(plaqueHole);
+                    plaqueTop.appendChild(plaqueString);
+                    plaque.appendChild(plaqueTop);
+                    plaque.appendChild(plaqueContent);
+                    plaque.appendChild(plaqueTassel);
+
+                    // 添加点击事件 - 进入第三个界面
+                    plaque.addEventListener('click', function () {
+                        handleWishPlaqueClick(blessing);
+                    });
+
+                    plaquesContainer.appendChild(plaque);
+                }
+            }
+
+            // 处理祝福牌点击
+            function handleWishPlaqueClick(blessing) {
+                // 设置第三个界面的内容
+                detailPlaqueContent.innerHTML = `<div class="blessing-content">${blessing}</div>`;
+
+                // 淡出第二个界面
+                wishScene.style.animation = 'fadeOut 0.8s forwards';
+
+                setTimeout(() => {
+                    wishScene.style.display = 'none';
+                    // 显示第三个界面
+                    plaqueDetailContainer.style.display = 'flex';
+                    plaqueDetailContainer.style.animation = 'fadeIn 0.8s forwards';
+                }, 800);
+            }
+
+            // 简单的安全防护
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+        // 移动端适配修复
+        function adjustForMobile() {
+            const mobile = window.innerWidth <= 768;
+
+            if (mobile) {
+                // 重新排列祝福牌
+                const container = document.getElementById('plaquesContainer');
+                if (container) {
+                    container.style.display = 'flex';
+                    container.style.flexWrap = 'wrap';
+                    container.style.justifyContent = 'space-around';
+                    container.style.alignContent = 'flex-start';
+                    container.style.height = '100%';
+                    container.style.overflowY = 'auto';
+                    container.style.padding = '10px 0';
+
+                    // 重新设置祝福牌样式
+                    const plaques = document.querySelectorAll('.wish-plaque');
+                    plaques.forEach(plaque => {
+                        plaque.style.position = 'relative';
+                        plaque.style.top = 'auto';
+                        plaque.style.left = 'auto';
+                        plaque.style.transform = 'none';
+                        plaque.style.margin = '5px';
+                        plaque.style.display = 'inline-block';
+                        plaque.style.width = '40px';
+                        plaque.style.height = '55px';
+                    });
+                }
+
+                // 确保灯谜墙滚动
+                const riddleWall = document.querySelector('.riddle-wall');
+                if (riddleWall) {
+                    riddleWall.style.overflowY = 'auto';
+                    riddleWall.style.webkitOverflowScrolling = 'touch'; // iOS平滑滚动
+                }
+            }
+        }
+
+        // 在页面加载和切换场景时调用
+        document.addEventListener('DOMContentLoaded', adjustForMobile);
+        window.addEventListener('resize', adjustForMobile);
+
+        // 监听第二个界面显示
+        const nextArrow = document.getElementById('nextArrow');
+        if (nextArrow) {
+            nextArrow.addEventListener('click', function () {
+                setTimeout(adjustForMobile, 500);
+            });
+        }
+    </script>
+</body>
+
+</html>
